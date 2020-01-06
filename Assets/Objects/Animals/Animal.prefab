@@ -198,8 +198,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb45574047d24249b924f82b3746472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
-  mainCamera: {fileID: 0}
   fontSize: 24
   font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   xOffset: 0
@@ -230,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb3a79cc6f89fc42b602831aededa82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  foodEnergyGain: 30
+  foodEnergyGain: 40
   energyDrainMultiplier: 0.5
   speed: 1
   senseRadius: 6

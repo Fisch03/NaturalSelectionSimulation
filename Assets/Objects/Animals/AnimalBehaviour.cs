@@ -34,7 +34,7 @@ public class AnimalBehaviour : MonoBehaviour {
 
     GameObject targetFood;
 
-    Vector2 planePosition;
+    Vector2Int planePosition;
 
     float EnergyFormula(float energy) { //The formula used for calculating energy loss each step. IMPORTANT: Speed energy loss is not linear as increasing the speed will also cause this to be called more frequently.
         energy -= (speed + senseRadius) * energyDrainMultiplier;
@@ -45,7 +45,8 @@ public class AnimalBehaviour : MonoBehaviour {
         pathfinder = GetComponent<AnimalPathFinding>();
         sensing = GetComponent<AnimalSensing>();
 
-        pathfinder.GoPath(GridPosToWorldPos(CalculateNewSearchPoint(planePosition, searchRadius)), speed, OnStep, OnPathFinished); //Start searching for food
+        planePosition = GridHelper.WorldPosToGridPos(transform.position);
+        pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.x), speed, OnStep, OnPathFinished); //Start searching for food
     }
 
     void Update() {
@@ -54,7 +55,7 @@ public class AnimalBehaviour : MonoBehaviour {
             Destroy(gameObject);
         }
 
-        planePosition = WorldPosToGridPos();
+        planePosition = GridHelper.WorldPosToGridPos(transform.position);
     }
 
     public void OnStep() { //Will be called each step
@@ -77,36 +78,17 @@ public class AnimalBehaviour : MonoBehaviour {
         pathfinder.ClearPath();
         switch (status) {
             case 0:
-                pathfinder.GoPath(GridPosToWorldPos(CalculateNewSearchPoint(planePosition, searchRadius)), speed, OnStep, OnPathFinished);
+                pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.y), speed, OnStep, OnPathFinished);
                 break;
             case 1:
                 status = 0;
                 Destroy(targetFood);
                 targetFood = null;
                 energy += foodEnergyGain;
-                pathfinder.GoPath(GridPosToWorldPos(CalculateNewSearchPoint(planePosition, searchRadius)), speed, OnStep, OnPathFinished);
+                pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.y), speed, OnStep, OnPathFinished);
                 break;
             default:
                 break;
         }
-    }
-
-    Vector2 CalculateNewSearchPoint(Vector2 position, int radius) { //Get random 2D point in radius of another
-        int xoff = Random.Range(-radius + 1, radius + 1);
-        int yoff = Random.Range(-radius + 1, radius + 1);
-        Vector2 point = new Vector2(position.x + xoff, position.y + yoff);
-        return point;
-    }
-
-    Vector2 WorldPosToGridPos() { //Calculate the 2D position on the grid from the world position of the animal
-        Vector2 planePos;
-        planePos = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.z));
-        return planePos;
-    }
-
-    Vector3 GridPosToWorldPos(Vector2 pos) { //Calculate the world position of the animal from a 2D point
-        Vector3 worldPos;
-        worldPos = new Vector3(pos.x, transform.position.y, pos.y);
-        return worldPos;
     }
 }

@@ -10,8 +10,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(AnimalBehaviour))]
 public class AnimalUIHandler : MonoBehaviour {
-    public Transform canvas;
-    public Camera mainCamera;
+    Transform canvas;
+    Camera mainCamera;
 
     [System.NonSerialized]
     public GameObject infoText;
@@ -27,6 +27,9 @@ public class AnimalUIHandler : MonoBehaviour {
     AnimalBehaviour behaviour;
 
     void Start() {
+        canvas = transform.parent.GetComponent<AnimalSpawner>().animalCanvas;
+        mainCamera = transform.parent.GetComponent<AnimalSpawner>().mainCamera;
+
         behaviour = transform.GetComponent<AnimalBehaviour>();
 
         infoText = CreateInfoText();
@@ -38,7 +41,7 @@ public class AnimalUIHandler : MonoBehaviour {
         canvasPos.x += xOffset / Vector3.Distance(transform.position, mainCamera.transform.position);
         canvasPos.y += yOffset / Vector3.Distance(transform.position, mainCamera.transform.position);
 
-        if(Vector3.Distance(transform.position, mainCamera.transform.position) > cutoffDistance) {
+        if(Vector3.Distance(transform.position, mainCamera.transform.position) > cutoffDistance || canvasPos.z <= 0) {
             infoText.GetComponent<Text>().enabled = false;
         } else {
             infoText.GetComponent<Text>().enabled = true;
