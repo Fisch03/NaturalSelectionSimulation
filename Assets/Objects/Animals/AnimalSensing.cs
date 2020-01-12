@@ -1,6 +1,7 @@
 ﻿/**
 --------------AnimalSensing.cs--------------
- Handles the sensing of food for the animal
+ Handles the sensing of food and 
+ mates for the animal
 --------------------------------------------
  **/
 
@@ -16,16 +17,22 @@ public class AnimalSensing : MonoBehaviour {
     public bool drawGizmos;
 
     LayerMask foodLayer;
+    LayerMask animalLayer;
 
     [System.NonSerialized]
     public Collider[] foodInView;
     [System.NonSerialized]
     public Transform closestFood;
+    [System.NonSerialized]
+    public Collider[] matesInView;
+    [System.NonSerialized]
+    public Transform closestMate;
 
     void Start() {
         behaviour = GetComponent<AnimalBehaviour>();
 
         foodLayer = LayerMask.GetMask("Food");
+        animalLayer = LayerMask.GetMask("Animals");
     }
 
     void Update() {
@@ -34,6 +41,13 @@ public class AnimalSensing : MonoBehaviour {
             closestFood = FindClosestCollider(transform.position, foodInView).transform;
         } else {
             closestFood = null;
+        }
+        
+        matesInView = Physics.OverlapSphere(transform.position, behaviour.senseRadius, animalLayer); //Overlap a sphere and find all food in it
+        if (matesInView.Length != 0) {
+            closestMate = FindClosestCollider(transform.position, matesInView).transform;
+        } else {
+            closestMate = null;
         }
     }
 

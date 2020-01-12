@@ -233,3 +233,4 @@ MonoBehaviour:
   speed: 1
   senseRadius: 6
   searchRadius: 3
+  reproductionThreshold: 70

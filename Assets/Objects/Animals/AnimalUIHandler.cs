@@ -52,10 +52,16 @@ public class AnimalUIHandler : MonoBehaviour {
         string status;
         switch(behaviour.status) {
             case 0:
-                status = "Searching food...";
+                status = "Searching food";
                 break;
             case 1:
-                status = "Walking towards food...";
+                status = "Walking towards food";
+                break;
+            case 2:
+                status = "Searching mate";
+                break;
+            case 3:
+                status = "Walking towards mate";
                 break;
             default:
                 status = "Unknown state";

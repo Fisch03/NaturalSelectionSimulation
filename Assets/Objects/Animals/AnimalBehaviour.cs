@@ -18,7 +18,7 @@ public class AnimalBehaviour : MonoBehaviour {
     [System.NonSerialized]
     public float energy = 100;
     [System.NonSerialized]
-    public int status = 0; //0 = searching for food, 1 = heading towards food
+    public int status = 0; //0 = searching for food, 1 = heading towards food, 2 = searching for mate, 3 = heading towards mate
 
     [Range(0, 100)]
     public int foodEnergyGain; //The amount of energy each food gives back
@@ -28,11 +28,11 @@ public class AnimalBehaviour : MonoBehaviour {
     public float speed; //Speed of the animal in steps per second
     [Range(1, 30)]
     public int senseRadius; //The radius in which the Animal senses food
-
     [Range(1, 10)]
     public int searchRadius; //When searching for food, this is the range in which the next random point will be picked. Increasing this will decrease the chance of going back and fourth in quick succesion
+    public int reproductionThreshold; //If the energy is higher than this, the Animal will start searching for Partners to reproduce
 
-    GameObject targetFood;
+    GameObject pathTarget;
 
     Vector2Int planePosition;
 
@@ -65,8 +65,20 @@ public class AnimalBehaviour : MonoBehaviour {
                 if(sensing.closestFood != null) {
                     pathfinder.ClearPath();
                     status = 1;
-                    targetFood = sensing.closestFood.gameObject;
+                    pathTarget = sensing.closestFood.gameObject;
                     pathfinder.GoPath(sensing.closestFood, speed, OnStep, OnPathFinished);
+                } else if(energy > reproductionThreshold) {
+                    status = 2;
+                }
+                break;
+            case 2:
+                if(sensing.closestMate != null) {
+                     pathfinder.ClearPath();
+                     status = 3;
+                     pathTarget = sensing.closestMate.gameObject;
+                     pathfinder.GoPath(sensing.closestMate, speed, OnStep, OnPathFinished);
+                } else if(energy < reproductionThreshold) {
+                    status = 0;
                 }
                 break;
             default:
@@ -81,11 +93,26 @@ public class AnimalBehaviour : MonoBehaviour {
                 pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.y), speed, OnStep, OnPathFinished);
                 break;
             case 1:
-                status = 0;
-                Destroy(targetFood);
-                targetFood = null;
+                if(energy > reproductionThreshold) {
+                    status = 2;
+                } else {
+                   status = 0;
+                } 
+                Destroy(pathTarget);
+                pathTarget = null;
                 energy += foodEnergyGain;
                 pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.y), speed, OnStep, OnPathFinished);
+                break;
+            case 2:
+                pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.y), speed, OnStep, OnPathFinished);
+                break;
+            case 3:
+                if(energy > reproductionThreshold) {
+                    status = 2;
+                } else {
+                    status = 0;
+                }
+                pathfinder.GoPath(GridHelper.GridPosToWorldPos(GridHelper.GetRandomPointInRadius(planePosition, searchRadius), transform.position.y), speed, OnStep, OnPathFinished);            
                 break;
             default:
                 break;
