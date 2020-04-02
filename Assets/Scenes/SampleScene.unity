@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44824862, g: 0.49827582, b: 0.575583, a: 1}
+  m_IndirectSpecularColor: {r: 0.44824868, g: 0.49827552, b: 0.5755828, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -145,7 +146,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 106377899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6837672, y: -1.5011137, z: 1.2645798}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -164,11 +165,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   food: {fileID: 6045714327780646090, guid: a2e23c0df89f96e4c9c733e513043a45, type: 3}
-  startFoodNumber: 100
-  maxFood: 500
-  spawnDelay: 0.5
+  animalSimulation: {fileID: 1365378893}
+  startFoodNumber: 200
+  maxFood: 750
   centerpos: {x: 0, y: 0.5, z: 0}
   radius: 49
+  foodSpawnCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.20565885
+      value: 3.5065017
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.027088027
+    - serializedVersion: 3
+      time: 40.011654
+      value: 0.039466158
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07167043
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  decreaseOverTime: 0.0001
 --- !u!1 &132317660
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,8 +220,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 132317660}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -291,7 +318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAAAIIew5RoMUVQIAAAIFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVE1T2zAQ/SsZnQtjGwJtb62B0AMfQ9rh4osirWNNZMmjD5LA5L93JSuxMblYee/t7ttd2R9EKNsBc9osjOAPmgP5OSPhTL7NBvIednSt1VK8w1HzKrhrgohGzQt1QiOehzCrW3BGsF9qLYM4Q9ArUWvT3vI1lNo6i3BNpQWkjHYhWiH0MSO7FLBPz/fwnB3wxEA5MIPqLDufZ/jL5/OkRyRPIYGMUV4xSdsOeHA/BOfZsQieolBhZ0kTkjAtpbDJFnH7LrZd0s56bAoFXFBsMxoK+gbEunH4pxgHP9W1BZdaMXR/IwxOq89Kfut+hC21m97ZG5U+1JnnRfTUJ334wudZcREFtdHt/bFy35NrBNu80D2j1o2mPIZvPlv3akvlhq4kvDagHvXCaK84ks74EOotFDejVKfuygbYZtD1bieg777uNR/2eoj970op2lVAzi97YCl1nPiPEAMGd/MHDcd7YlMmRIOJfxb+0vX4QiXiThjrkEoFVXC30t4EKbnDQ5g9867URkFEk+UOFJVu/4xZ3HSHE25UdcLc0fDmpNqJO74Qk5AID/osm1DPenvalW309gFs8+SdFGqcLDCPOKdSK9XfMTthQ9zSm5qycdzaC/75dpG6yIqa/siLi2teX10XZ/McstX16qq+mrPvwC9JvHxCYadUPvdW04BwbWoYpcKLdvykzBaGdvHCc0O3C/He6tHQhar1khkA9dRnODkHg0XwxeS3XOCIluCcUHHh5KMiUrMN8OqUqIqt3u6codWQpSKdeNMuIBUp44ekIgdy+A9QSwMEFAAACAgAAAgh7C8HiitsAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTUUVBKL0osyCgGioA5pZkpIHa0UpqRgVFaoqWhkbF5SpqZuZGuqWGqQZJ5klmamWmyRWqKiVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAACCHsOUaDFFUCAAACBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAACCHsLweKK2wAAAB4AAAACQAkAAAAAAAAAAAAAACiAgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAFkDAAAAAA==
+    dataString: UEsDBBQAAAgIAAAIIew5RoMUVQIAAAIFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVE1T2zAQ/SsZnQtjGwJtb62B0AMfQ9rh4osirWNNZMmjD5LA5L93JSuxMblYee/t7ttd2R9EKNsBc9osjOAPmgP5OSPhTL7NBvIednSt1VK8w1HzKrhrgohGzQt1QiOehzCrW3BGsF9qLYM4Q9ArUWvT3vI1lNo6i3BNpQWkjHYhWiH0MSO7FLBPz/fwnB3wxEA5MIPqLDufZ/jL5/OkRyRPIYGMUV4xSdsOeHA/BOfZsQieolBhZ0kTkjAtpbDJFnH7LrZd0s56bAoFXFBsMxoK+gbEunH4pxgHP9W1BZdaMXR/IwxOq89Kfut+hC21m97ZG5U+1JnnRfTUJ334wudZcREFtdHt/bFy35NrBNu80D2j1o2mPIZvPlv3akvlhq4kvDagHvXCaK84ks74EOotFDejVKfuygbYZtD1bieg777uNR/2eoj970op2lVAzi97YCl1nPiPEAMGd/MHDcd7YlMmRIOJfxb+0vX4QiXiThjrkEoFVXC30t4EKbnDQ5g9867URkFEk+UOFJVu/4xZ3HSHE25UdcLc0fDmpNqJO74Qk5AID/osm1DPenvalW309gFs8+SdFGqcLDCPOKdSK9XfMTthQ9zSm5qycdzaC/75dpG6yIqa/siLi2teX10XZ/McstX16qq+mrPvwC9JvHxCYadUPvdW04BwbWoYpcKLdvykzBaGdvHCc0O3C/He6tHQhar1khkA9dRnODkHg0XwxeS3XOCIluCcUHHh5KMiUrMN8OqUqIqt3u6codWQpSKdeNMuIBUp44ekIgdy+A9QSwMEFAAACAgAAAgh7HJ55jJtAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTSUVBKL0osyCgGihiCOKWZKSB2tFKakYFRWqKloZGxeUqambmRrqlhqkGSeZJZmplpskVqiolSLFB9SWVBql9ibipET0BiSUZaZl5KZl66nntRZoo7yGil2FoAUEsBAi0AFAAACAgAAAgh7DlGgxRVAgAAAgUAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAAgh7HJ55jJtAAAAeAAAAAkAJAAAAAAAAAAAAAAAogIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAABaAwAAAAA=
     upgradeData: 
     file_cachedStartup: {fileID: 0}
     data_cachedStartup: 
@@ -319,7 +346,39 @@ MonoBehaviour:
     _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
     _AreaColors:
     - {r: 0, g: 0, b: 0, a: 0}
-  tagNames: []
+  tagNames:
+  - Basic Ground
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
   heuristic: 2
   heuristicScale: 1
   threadCount: 1
@@ -562,15 +621,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1365378892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cc8af811615b124dab194012d06829e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e6e8ddcf40aa4c468b4fbaa2d277b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animal: {fileID: 5682996619883881994, guid: 38d7d723a31b39a4091b7254a842d993, type: 3}
+  foodSpawner: {fileID: 106377901}
   animalCanvas: {fileID: 1884533044}
   mainCamera: {fileID: 1251215051}
-  animalCount: 10
+  startAnimalCount: 10
   centerpos: {x: 0, y: 0.5, z: 0}
-  radius: 50
+  radius: 49
+  simulationSpeed: 1
+  writeDataToFile: 1
+  logFrequency: 1
+  valueMultiplier: 1000
 --- !u!4 &1365378894
 Transform:
   m_ObjectHideFlags: 0
@@ -579,7 +643,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1365378892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.2392068, y: -21.013203, z: -6.845211}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -632,6 +696,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

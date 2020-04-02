@@ -27,8 +27,8 @@ public class AnimalUIHandler : MonoBehaviour {
     AnimalBehaviour behaviour;
 
     void Start() {
-        canvas = transform.parent.GetComponent<AnimalSpawner>().animalCanvas;
-        mainCamera = transform.parent.GetComponent<AnimalSpawner>().mainCamera;
+        canvas = transform.parent.GetComponent<AnimalSimulation>().animalCanvas;
+        mainCamera = transform.parent.GetComponent<AnimalSimulation>().mainCamera;
 
         behaviour = transform.GetComponent<AnimalBehaviour>();
 
@@ -62,6 +62,9 @@ public class AnimalUIHandler : MonoBehaviour {
                 break;
             case 3:
                 status = "Walking towards mate";
+                break;
+            case 4:
+                status = "Waiting for mate";
                 break;
             default:
                 status = "Unknown state";

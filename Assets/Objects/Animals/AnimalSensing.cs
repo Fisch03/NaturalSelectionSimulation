@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(AnimalBehaviour))]
@@ -22,9 +23,9 @@ public class AnimalSensing : MonoBehaviour {
     [System.NonSerialized]
     public Collider[] foodInView;
     [System.NonSerialized]
-    public Transform closestFood;
-    [System.NonSerialized]
     public Collider[] matesInView;
+    [System.NonSerialized]
+    public Transform closestFood;
     [System.NonSerialized]
     public Transform closestMate;
 
@@ -35,17 +36,21 @@ public class AnimalSensing : MonoBehaviour {
         animalLayer = LayerMask.GetMask("Animals");
     }
 
-    void Update() {
+    public void Sense() {
         foodInView = Physics.OverlapSphere(transform.position, behaviour.senseRadius, foodLayer); //Overlap a sphere and find all food in it
-        if (foodInView.Length != 0) {
+        if (foodInView.Length > 0) {
             closestFood = FindClosestCollider(transform.position, foodInView).transform;
         } else {
             closestFood = null;
         }
-        
-        matesInView = Physics.OverlapSphere(transform.position, behaviour.senseRadius, animalLayer); //Overlap a sphere and find all food in it
-        if (matesInView.Length != 0) {
-            closestMate = FindClosestCollider(transform.position, matesInView).transform;
+
+        gameObject.layer = LayerMask.NameToLayer("Default");
+        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer("Default");
+        matesInView = Physics.OverlapSphere(transform.position, behaviour.senseRadius, animalLayer); //Overlap a sphere and find all potential mates in it
+        gameObject.layer = LayerMask.NameToLayer("Animals");
+        gameObject.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer("Animals");
+        if (matesInView.Length > 0) {
+            closestMate = FindClosestCollider(transform.position, matesInView).transform.parent;
         } else {
             closestMate = null;
         }
@@ -56,7 +61,7 @@ public class AnimalSensing : MonoBehaviour {
         float bestDistance = Vector3.Distance(position, colliders[0].transform.position);
         foreach(Collider collider in colliders) {
             float distance = Vector3.Distance(position, collider.transform.position);
-            if(distance < bestDistance) {
+            if(distance < bestDistance && collider.transform.parent != transform) {
                 bestDistance = distance;
                 bestCollider = collider;
             }
@@ -71,17 +76,12 @@ public class AnimalSensing : MonoBehaviour {
         }
     }
 
-    void OnDrawGizmosSelected() { //Mark the food in the radius and highlight the closest
-        if(drawGizmos && foodInView.Length != 0 && closestFood != null) {
-            Collider closest = FindClosestCollider(transform.position, foodInView);
-            foreach (Collider food in foodInView) {
-                if (food == closest) {
-                    Gizmos.color = Color.red;
-                } else {
-                    Gizmos.color = Color.yellow;
-                }
-                Gizmos.DrawWireCube(food.transform.position, new Vector3(0.5f, 0.5f, 0.5f));
+    void OnDrawGizmosSelected() { //Mark the potential Mates in view
+        if (drawGizmos) {
+            if (closestMate != null) {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(closestMate.position, 0.75f);
             }
-        }    
+        }
     }
 }

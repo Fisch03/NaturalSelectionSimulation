@@ -27,18 +27,19 @@ public class AnimalPathFinding : MonoBehaviour {
     bool reachedEnd;
     bool jumping = false;
 
-    //Calculate the path to a point and move along it (accepts either a transform or a point as parameter
-    public void GoPath(Transform target, float jumpSpeed, StepDel stepCallback, FinishedDel finishedCallback) {
-        speed = jumpSpeed;
+    public void SetCallbacks(StepDel stepCallback, FinishedDel finishedCallback) {
         onStepCallback = stepCallback;
         onFinishCallback = finishedCallback;
+    }
+
+    //Calculate the path to a point and move along it (accepts either a transform or a point as parameter)
+    public void GoPath(Transform target, float jumpSpeed) {
+        speed = jumpSpeed;
         alreadyCalledBack = false;
         GetComponent<Seeker>().StartPath(transform.position, target.position, OnPathComplete); //Start calculation
     }
-    public void GoPath(Vector3 target, float jumpSpeed, StepDel stepCallback, FinishedDel finishedCallback) {
+    public void GoPath(Vector3 target, float jumpSpeed) {
         speed = jumpSpeed;
-        onStepCallback = stepCallback;
-        onFinishCallback = finishedCallback;
         alreadyCalledBack = false;
         GetComponent<Seeker>().StartPath(transform.position, target, OnPathComplete); //Start calculation
     }
@@ -59,7 +60,7 @@ public class AnimalPathFinding : MonoBehaviour {
     IEnumerator Jump() { //Coroutine for playing the Jump animation
         jumping = true;
         Animation anim = transform.GetChild(0).GetComponent<Animation>();
-        anim[anim.clip.name].speed = speed;
+        anim[anim.clip.name].speed = speed * transform.parent.GetComponent<AnimalSimulation>().simulationSpeed;
         anim.Play();
     
         while (anim.isPlaying) {

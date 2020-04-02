@@ -19,4 +19,9 @@ public class GridHelper : MonoBehaviour {
         Vector3 worldPos = new Vector3(pos.x, yCoord, pos.y);
         return worldPos;
     }
+
+    public static Vector2Int GetMiddlePoint(Vector2Int pos1, Vector2Int pos2) {
+        Vector2 middlePoint = (Vector2)(pos1 + pos2) / 2f;
+        return Vector2Int.RoundToInt(middlePoint);
+    }
 }
