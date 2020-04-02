@@ -1,25 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class FoodSpawner : MonoBehaviour {
     public GameObject food;
+    public AnimalSimulation animalSimulation;
 
     public int startFoodNumber;
     public int maxFood;
-    public float spawnDelay;
     public Vector3 centerpos;
     public int radius;
-    
+    public AnimationCurve foodSpawnCurve = AnimationCurve.Linear(0, 0, 250, 5);
+    [Range(0, 0.01f)]
+    public float decreaseOverTime;
 
-    List<Vector2Int> allFoodPositions = new List<Vector2Int>();
+    float currentFoodAmount = 1;
+
+    [System.NonSerialized]
+    public List<Vector2Int> allFoodPositions = new List<Vector2Int>();
 
     void Start() {
         while(allFoodPositions.Count < startFoodNumber) {
             CreateNewFood();
         }
 
-        InvokeRepeating("CreateNewFood", spawnDelay, spawnDelay);
+        StartCoroutine(FoodSpawnLoop());
+        StartCoroutine(DecreaseFoodSpawn());
+    }
+
+    IEnumerator FoodSpawnLoop() {
+        while(true) {
+            if(allFoodPositions.Count < maxFood) {
+                CreateNewFood();
+            }
+            yield return new WaitForSeconds(1 / (animalSimulation.simulationSpeed * currentFoodAmount * foodSpawnCurve.Evaluate(animalSimulation.transform.childCount) + 1));
+        }
     }
 
     void CreateNewFood() {
@@ -35,4 +51,12 @@ public class FoodSpawner : MonoBehaviour {
             }
         }
     }
+
+    IEnumerator DecreaseFoodSpawn() {
+        while(true) {
+            currentFoodAmount = currentFoodAmount / (decreaseOverTime+1);
+            yield return new WaitForSeconds(1 / (animalSimulation.simulationSpeed + 1));
+        }
+    }
+
 }
